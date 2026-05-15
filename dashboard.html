@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Smart Traffic Logger Dashboard</title>
+
+<link rel="stylesheet"
+href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+body{
+background:#f4f6f9;
+font-family:Segoe UI;
+}
+
+/* Sidebar */
+
+.sidebar{
+height:100vh;
+background:#1f2d3d;
+color:white;
+padding-top:20px;
+}
+
+.sidebar h4{
+text-align:center;
+margin-bottom:30px;
+}
+
+.sidebar a{
+display:block;
+color:white;
+padding:12px 20px;
+text-decoration:none;
+}
+
+.sidebar a:hover{
+background:#2c3e50;
+}
+
+/* Topbar */
+
+.topbar{
+background:white;
+padding:12px;
+box-shadow:0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Cards */
+
+.stat-card{
+background:white;
+border-radius:10px;
+padding:20px;
+box-shadow:0 3px 8px rgba(0,0,0,0.08);
+text-align:center;
+}
+
+.stat-card h6{
+color:#777;
+}
+
+.stat-number{
+font-size:26px;
+font-weight:bold;
+color:#2c3e50;
+}
+
+/* Chart container */
+
+.chart-box{
+background:white;
+padding:20px;
+border-radius:10px;
+box-shadow:0 3px 8px rgba(0,0,0,0.08);
+}
+
+/* Chart size */
+
+canvas{
+max-width:420px !important;
+max-height:280px !important;
+margin:auto;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="container-fluid">
+
+<div class="row">
+
+<!-- SIDEBAR -->
+
+<div class="col-md-2 sidebar">
+
+<h4>🚦 Traffic Logger</h4>
+
+<a href="/">➕ Add Violation</a>
+<a href="/history">📄 View History</a>
+<a href="#">📊 Dashboard</a>
+<a href="/logout">🚪 Logout</a>
+
+</div>
+
+
+
+<!-- MAIN CONTENT -->
+
+<div class="col-md-10">
+
+<!-- TOPBAR -->
+
+<div class="topbar d-flex justify-content-between">
+
+<h5>Dashboard</h5>
+
+<form action="/search" class="d-flex">
+
+<input
+type="text"
+name="vehicle_number"
+class="form-control me-2"
+placeholder="Search Vehicle Number">
+
+<button class="btn btn-primary">
+Search
+</button>
+
+</form>
+
+</div>
+
+
+
+<div class="p-4">
+
+<!-- STAT CARDS -->
+
+<div class="row g-3">
+
+<div class="col-md-3">
+<div class="stat-card">
+<h6>Total Violations</h6>
+<div class="stat-number">{{total}}</div>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="stat-card">
+<h6>Paid Fines</h6>
+<div class="stat-number">{{paid}}</div>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="stat-card">
+<h6>Unpaid Fines</h6>
+<div class="stat-number">{{unpaid}}</div>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="stat-card">
+<h6>Total Fine Amount</h6>
+<div class="stat-number">₹ {{total_fine}}</div>
+</div>
+</div>
+
+</div>
+
+
+
+<!-- CHARTS -->
+
+<div class="row mt-4">
+
+<div class="col-md-6">
+
+<div class="chart-box text-center">
+
+<h6>Violation Statistics</h6>
+
+<canvas id="barChart"></canvas>
+
+</div>
+
+</div>
+
+
+<div class="col-md-6">
+
+<div class="chart-box text-center">
+
+<h6>Fine Payment Status</h6>
+
+<canvas id="pieChart"></canvas>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- RECENT VIOLATIONS TABLE -->
+
+<div class="chart-box mt-4">
+
+<h6 class="mb-3">Recent Violations</h6>
+
+<table class="table table-striped">
+
+<thead>
+
+<tr>
+
+<th>Vehicle</th>
+<th>Violation</th>
+<th>Location</th>
+<th>Fine</th>
+<th>Status</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for v in recent %}
+
+<tr>
+
+<td>{{v.vehicle_number}}</td>
+<td>{{v.violation_type}}</td>
+<td>{{v.location}}</td>
+<td>₹ {{v.fine}}</td>
+<td>
+
+{% if v.status == "Paid" %}
+
+<span class="badge bg-success">Paid</span>
+
+{% else %}
+
+<span class="badge bg-danger">Unpaid</span>
+
+{% endif %}
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<script>
+
+/* BAR CHART */
+
+new Chart(document.getElementById("barChart"),{
+
+type:"bar",
+
+data:{
+
+labels:["Total","Paid","Unpaid"],
+
+datasets:[{
+
+data:[{{total}},{{paid}},{{unpaid}}],
+
+backgroundColor:"#4a90e2"
+
+}]
+
+},
+
+options:{
+
+plugins:{
+legend:{display:false}
+},
+
+scales:{
+y:{beginAtZero:true}
+}
+
+}
+
+});
+
+
+/* PIE CHART */
+
+new Chart(document.getElementById("pieChart"),{
+
+type:"pie",
+
+data:{
+
+labels:["Paid","Unpaid"],
+
+datasets:[{
+
+data:[{{paid}},{{unpaid}}],
+
+backgroundColor:[
+"#28a745",
+"#dc3545"
+]
+
+}]
+
+}
+
+});
+
+</script>
+
+</body>
+
+</html>

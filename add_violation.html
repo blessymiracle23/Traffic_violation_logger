@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Add Violation</title>
+
+<link rel="stylesheet"
+href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+<style>
+
+body{
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+font-family:Segoe UI;
+min-height:100vh;
+}
+
+.navbar{
+background:#0b132b;
+}
+
+.brand{
+color:#5bc0be;
+font-weight:bold;
+font-size:22px;
+}
+
+.form-card{
+background:white;
+padding:35px;
+border-radius:15px;
+box-shadow:0px 8px 25px rgba(0,0,0,0.3);
+}
+
+.form-title{
+text-align:center;
+margin-bottom:25px;
+font-weight:600;
+color:#1c2541;
+}
+
+.form-control{
+border-radius:8px;
+padding:10px;
+}
+
+.btn-submit{
+background:#5bc0be;
+border:none;
+font-weight:500;
+padding:10px;
+border-radius:8px;
+}
+
+.btn-submit:hover{
+background:#3aafa9;
+}
+
+.footer{
+text-align:center;
+margin-top:30px;
+color:#d1d1d1;
+font-size:14px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<nav class="navbar navbar-dark">
+
+<div class="container">
+
+<span class="brand">
+🚓 Traffic Violation Logger
+</span>
+
+<div>
+
+<a href="/" class="btn btn-outline-light btn-sm me-2">
+Add Violation
+</a>
+
+<a href="/dashboard" class="btn btn-info btn-sm">
+Dashboard
+</a>
+
+</div>
+
+</div>
+
+</nav>
+
+
+<div class="container mt-5">
+
+<div class="row justify-content-center">
+
+<div class="col-md-5">
+
+<div class="form-card">
+
+<h4 class="form-title">
+Add New Traffic Violation
+</h4>
+
+<form method="POST">
+
+<div class="mb-3">
+<label>Vehicle Number</label>
+<input type="text" name="vehicle" class="form-control" required>
+</div>
+
+<div class="mb-3">
+<label>Violation Type</label>
+<input type="text" name="violation" class="form-control" required>
+</div>
+
+<div class="mb-3">
+<label>Location</label>
+<input type="text" name="location" class="form-control" required>
+</div>
+
+<div class="mb-3">
+<label>Date</label>
+<input type="date" name="date" class="form-control" required>
+</div>
+
+<div class="mb-3">
+<label>Fine Amount</label>
+<input type="number" name="fine" class="form-control" required>
+</div>
+
+<div class="d-grid">
+<button class="btn btn-submit">
+Submit Violation
+</button>
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="footer">
+Smart Traffic Violation Monitoring System
+</div>
+
+</body>
+</html>

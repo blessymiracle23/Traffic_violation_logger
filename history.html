@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Violation History</title>
+
+<link rel="stylesheet"
+href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+<style>
+
+body{
+background:#f8fafc;
+font-family:Segoe UI;
+}
+
+.navbar{
+background:#4f46e5;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<nav class="navbar navbar-dark">
+
+<div class="container">
+
+<span class="navbar-brand">Violation Records</span>
+
+<a href="/dashboard" class="btn btn-light btn-sm">
+Dashboard
+</a>
+
+</div>
+
+</nav>
+
+<div class="container mt-4">
+
+<table class="table table-bordered table-striped">
+
+<tr>
+<th>ID</th>
+<th>Vehicle</th>
+<th>Violation</th>
+<th>Location</th>
+<th>Date</th>
+<th>Fine</th>
+<th>Status</th>
+<th>QR</th>
+<th>Action</th>
+</tr>
+
+{% for r in records %}
+
+<tr>
+
+<td>{{r.id}}</td>
+
+<td>{{r.vehicle_number}}</td>
+
+<td>{{r.violation_type}}</td>
+
+<td>{{r.location}}</td>
+
+<td>{{r.date}}</td>
+
+<td>₹{{r.fine_amount}}</td>
+
+<td>
+
+{% if r.status == "Paid" %}
+
+<span class="badge bg-success">Paid</span>
+
+{% else %}
+
+<span class="badge bg-danger">Unpaid</span>
+
+{% endif %}
+
+</td>
+
+
+<td>
+
+<img
+src="{{ url_for('static', filename='qr/' ~ r.id ~ '.png') }}"
+width="70">
+
+</td>
+
+
+<td>
+
+{% if r.status == "Unpaid" %}
+
+<a href="/pay/{{r.id}}" class="btn btn-success btn-sm">
+Mark Paid
+</a>
+
+{% endif %}
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+</body>
+</html>
